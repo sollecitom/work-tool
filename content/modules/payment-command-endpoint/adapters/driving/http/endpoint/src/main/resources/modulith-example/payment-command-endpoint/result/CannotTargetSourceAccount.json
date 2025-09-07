@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "is-error"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "cannot-target-source-account"
+      ]
+    },
+    "is-error": {
+      "type": "boolean",
+      "enum": [
+        true
+      ]
+    }
+  }
+}

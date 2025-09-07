@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source-account",
+    "target-account",
+    "amount"
+  ],
+  "properties": {
+    "source-account": {
+      "$ref": "/modulith-example/shared/account/domain/model/AccountReference.json"
+    },
+    "target-account": {
+      "$ref": "/modulith-example/shared/account/domain/model/AccountReference.json"
+    },
+    "amount": {
+      "$ref": "/json/schemas/acme/common/currency/CurrencyAmount.json"
+    }
+  }
+}

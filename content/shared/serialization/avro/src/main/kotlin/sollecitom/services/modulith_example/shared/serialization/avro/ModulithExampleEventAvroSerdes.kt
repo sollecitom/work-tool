@@ -1,0 +1,3 @@
+package sollecitom.services.modulith_example.shared.serialization.avro
+
+object ModulithExampleEventAvroSerdes

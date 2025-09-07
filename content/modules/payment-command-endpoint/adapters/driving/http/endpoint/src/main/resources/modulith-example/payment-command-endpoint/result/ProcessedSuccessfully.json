@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "is-error",
+    "was-processed"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "processed-successfully"
+      ]
+    },
+    "was-processed": {
+      "type": "boolean",
+      "enum": [
+        true
+      ]
+    },
+    "is-error": {
+      "type": "boolean",
+      "enum": [
+        false
+      ]
+    }
+  }
+}

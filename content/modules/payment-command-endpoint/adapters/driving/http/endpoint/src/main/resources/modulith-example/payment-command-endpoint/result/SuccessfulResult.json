@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "is-error",
+    "type",
+    "was-processed"
+  ],
+  "properties": {
+    "is-error": {
+      "type": "boolean",
+      "enum": [
+        false
+      ]
+    },
+    "was-processed": {
+      "type": "boolean"
+    },
+    "type": {
+      "type": "string"
+    },
+    "account": {}
+  },
+  "oneOf": [
+    {
+      "$ref": "/modulith-example/payment-command-endpoint/result/ProcessedSuccessfully.json"
+    },
+    {
+      "$ref": "/modulith-example/payment-command-endpoint/result/InsufficientBalanceOnSourceAccount.json"
+    },
+    {
+      "$ref": "/modulith-example/payment-command-endpoint/result/NonexistentAccount.json"
+    }
+  ]
+}

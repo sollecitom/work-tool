@@ -1,0 +1,299 @@
+openapi: 3.1.0
+info:
+  title: Modulith Example Service
+  description: An example service to showcase patterns and libraries.
+  version: "1.0"
+paths:
+  /api:
+    get:
+      operationId: getOpenApiDefinition
+      summary: Retrieves the OpenApi definition for the service.
+      parameters:
+        - $ref: '#/components/parameters/accept'
+      responses:
+        "200":
+          $ref: '#/components/responses/OpenApiDefinition'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "415":
+          $ref: '#/components/responses/UnsupportedMediaType'
+        422:
+          $ref: '#/components/responses/ApiError'
+        500:
+          $ref: '#/components/responses/UnexpectedError'
+        502:
+          $ref: '#/components/responses/BadGateway'
+
+  /events/deposit/v1:
+    post:
+      operationId: publishDepositEvent
+      summary: Publishes a deposit event occurred in another system.
+      parameters:
+        - $ref: '#/components/parameters/invocationContext'
+        - $ref: '#/components/parameters/accept'
+        - $ref: '#/components/parameters/contentLength'
+      requestBody:
+        description: A deposit event.
+        content:
+          application/json:
+            schema:
+              $ref: '/modulith-example/deposit-event-endpoint/arguments/Arguments.json'
+            examples:
+              DepositEvent:
+                summary: A deposit event.
+                value:
+                  { "event":
+                      { "metadata": { "context": { "invocation": { "trace": { "originating": { "created-at": "2025-02-05T21:05:49.551707Z","id": { "type": "ulid","value": "01JKBYY0DJ25Q3RK68C7CBZMVV" } },"parent": { "created-at": "2025-02-05T21:05:50.551707Z","id": { "type": "ulid","value": "01JKBYY0DJ25Q3RK68C7CBZMVW" } },"invocation": { "created-at": "2025-02-05T21:05:52.551707Z","id": { "type": "ulid","value": "01JKBYY0DJ25Q3RK68C7CBZMVX" } },"external": { "action-id": { "type": "string","value": "01JKBYY0DJ25Q3RK68C7CBZMVT" },"invocation-id": { "type": "string","value": "01JKBYY0DJ25Q3RK68C7CBZMVS" } } },"access": { "actor": { "type": "direct","account": { "id": { "type": "ulid","value": "01JKBYY0D90MYY1DMZGTKDMGKB" },"type": "user","locale": "en-GB","tenant": { "id": { "type": "ulid","value": "01JKBYY0DAH7KQNN2VGC90QJ1W" } },"customer": { "is-test": false,"id": { "type": "ulid","value": "01JKBYY0DAH7KQNN2VGC90QJ1V" } } },"authentication": { "session": { "id": { "type": "ulid","value": "01JKBYY0DC963NBXV7WK4RJYCX" },"type": "simple" },"type": "credentials-based","token": { "valid-to": "2025-02-05T21:30:52.554878Z","id": { "type": "ulid","value": "01JKBYY0DB1JHDZAC4MM6QSHCD" },"valid-from": "2025-02-05T21:00:52.554878Z" } } },"authorization": { "roles": { "values": [ { "name": "user" } ] } },"origin": { "client-info": { "agent": { "name": "Apache-HttpAsyncClient","version": "5.2.1","class-name": "Special" },"layout-engine": { "name": "AppleWebKit","version": "800.6.25","class-name": "WebKit" },"operating-system": { "name": "Android (Upside Down Cake)","version": "14","class-name": "Android" },"device": { "name": "Pixel 8","brand": "Google","class-name": "Mobile" } },"ip-address": "127.0.0.1" },"scope": { "container-stack": [ { "id": { "type": "ulid","value": "01JKBYY0DJ25Q3RK68C7CBZMVQ" } },{ "id": { "type": "ulid","value": "01JKBYY0DJ25Q3RK68C7CBZMVR" } } ] },"is-test": false,"type": "authenticated" },"toggles": { "values": [ ] } } },"id": { "type": "string","value": "01JKBYY0D5Y0KPQ7MCRX0PYK4S" },"timestamp": "2025-02-05T21:05:52.550506Z" },
+                        "data": { "amount": { "currency": "GBP","units": 4863765 },"target-account": { "type": "internal-account-number","value": "116832218127532" } }
+                      }
+                  }
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DepositEventResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "415":
+          $ref: '#/components/responses/UnsupportedMediaType'
+        422:
+          $ref: '#/components/responses/ApiError'
+        500:
+          $ref: '#/components/responses/UnexpectedError'
+        502:
+          $ref: '#/components/responses/BadGateway'
+
+  /commands/send-payment/v1:
+    post:
+      operationId: sendPayment
+      summary: Initiates a send payment command to move money from an account to another.
+      parameters:
+        - $ref: '#/components/parameters/invocationContext'
+        - $ref: '#/components/parameters/accept'
+        - $ref: '#/components/parameters/contentLength'
+      requestBody:
+        description: Details of the payment, including source and target accounts, and the amount..
+        content:
+          application/json:
+            schema:
+              $ref: '/modulith-example/payment-command-endpoint/arguments/Arguments.json'
+            examples:
+              DepositEvent:
+                summary: A deposit event.
+                value:
+                  {
+                    "amount": { "currency": "GBP","units": 2246243 },
+                    "source-account": { "type": "internal-account-number","value": "332682537823052" },
+                    "target-account": { "type": "internal-account-number","value": "042738488475263" }
+                  }
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/SendPaymentCommandResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "415":
+          $ref: '#/components/responses/UnsupportedMediaType'
+        422:
+          $ref: '#/components/responses/ApiError'
+        500:
+          $ref: '#/components/responses/UnexpectedError'
+        502:
+          $ref: '#/components/responses/BadGateway'
+
+components:
+  parameters:
+    invocationContext:
+      name: x-acme-invocation-context
+      in: header
+      description: Invocation context from the API gateway
+      required: true
+      explode: false
+      schema:
+        $ref: '/json/schemas/acme/common/correlation/context/InvocationContext.json'
+      examples:
+        InvocationContext:
+          $ref: '#/components/examples/InvocationContext'
+    contentLength:
+      name: content-length
+      in: header
+      description: Length of the request body
+      required: true
+      explode: false
+      schema:
+        type: string
+        minLength: 1
+    accept:
+      name: Accept
+      in: header
+      description: The media type accepted by the client.
+      required: false
+      schema:
+        type: string
+  headers:
+    location:
+      schema:
+        type: string
+        minLength: 1
+      required: true
+      description: Location
+    date:
+      schema:
+        type: string
+        minLength: 1
+      required: true
+      description: Location
+    connection:
+      schema:
+        type: string
+        minLength: 1
+      required: true
+      description: Location
+    transferEncoding:
+      schema:
+        type: string
+        minLength: 1
+      required: true
+      description: Transfer encoding
+    contentType:
+      schema:
+        type: string
+        minLength: 1
+      required: true
+      description: Content type
+    contentLength:
+      schema:
+        type: string
+        minLength: 1
+      required: true
+      description: Content length
+  responses:
+    OpenApiDefinition:
+      description: The OpenAPI definition.
+      content:
+        application/json: { }
+        application/yaml: { }
+      headers:
+        content-type:
+          $ref: '#/components/headers/contentType'
+        content-length:
+          $ref: '#/components/headers/contentLength'
+
+    DepositEventResponse:
+      description: The Event was processed
+      content:
+        application/json:
+          schema:
+            $ref: '/modulith-example/deposit-event-endpoint/result/Result.json'
+          examples:
+            Successful:
+              $ref: '#/components/examples/SuccessWithoutInformation'
+            Error:
+              $ref: '#/components/examples/Error'
+      headers:
+        content-type:
+          $ref: '#/components/headers/contentType'
+        content-length:
+          $ref: '#/components/headers/contentLength'
+
+    SendPaymentCommandResponse:
+      description: Whether the command was processed.
+      content:
+        application/json:
+          schema:
+            $ref: '/modulith-example/payment-command-endpoint/result/Result.json'
+          examples:
+            ProcessedSuccessfully:
+              $ref: '#/components/examples/CommandWasProcessedSuccessfully'
+            CannotTargetSourceAccountError:
+              $ref: '#/components/examples/CannotTargetSourceAccountError'
+      headers:
+        content-type:
+          $ref: '#/components/headers/contentType'
+        content-length:
+          $ref: '#/components/headers/contentLength'
+
+    # Standard error responses
+    BadRequest:
+      description: The request could not be understood e.g., headers, query parameters or request body are malformed.
+    UnsupportedMediaType:
+      description: The content type in the request body is not supported.
+    ApiError:
+      description: The request couldn't be processed because of a mistake on the client side.
+      content:
+        application/json:
+          schema:
+            $ref: '/json/schemas/acme/common/web/api/ApiError.json'
+          examples:
+            AuthenticatedAccessRequired:
+              $ref: '#/components/examples/ApiError'
+      headers:
+        content-type:
+          $ref: '#/components/headers/contentType'
+        content-length:
+          $ref: '#/components/headers/contentLength'
+    BadGateway:
+      description: A dependent service is not responding.
+    UnexpectedError:
+      description: Something went wrong unexpectedly.
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: "Something went wrong on the server"
+      headers:
+        content-type:
+          $ref: '#/components/headers/contentType'
+        content-length:
+          $ref: '#/components/headers/contentLength'
+
+  examples:
+    InvocationContext:
+      summary: The invocation context as JSON.
+      value:
+        {
+          "trace": { "originating": { "created-at": "2024-06-23T08:07:02.219789Z","id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEW2" } },"parent": { "created-at": "2024-06-23T08:07:03.219789Z","id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEW3" } },"invocation": { "created-at": "2024-06-23T08:07:05.219789Z","id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEW4" } },"external": { "action-id": { "type": "string","value": "01J1224V83KZS4487MPF0KN5RB" },"invocation-id": { "type": "string","value": "01J1224V83KZS4487MPF0KN5RA" } } },
+          "access": { "actor": { "type": "direct","account": { "id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEVv" },"type": "user","locale": "en-GB","tenant": { "id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEVx" } },"customer": { "is-test": false,"id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEVw" } } },"authentication": { "session": { "id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEVz" },"type": "simple" },"type": "credentials-based","token": { "valid-to": "2024-06-23T08:32:05.219801Z","id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEVy" },"valid-from": "2024-06-23T08:02:05.219801Z" } } },"authorization": { "roles": { "values": [ { "name": "user" } ] } },"origin": { "client-info": { "agent": { "name": "Apache-HttpAsyncClient","version": { "patch": 1,"major": 5,"minor": 2,"type": "semantic" },"class-name": "Special" },"layout-engine": { "name": "AppleWebKit","version": { "patch": 25,"major": 800,"minor": 6,"type": "semantic" },"class-name": "WebKit" },"operating-system": { "name": "Android (Upside Down Cake)","version": { "type": "simple","value": "14" },"class-name": "Android" },"device": { "name": "Pixel 8","brand": "Google","class-name": "Mobile" } },"ip-address": "127.0.0.1" },"scope": { "container-stack": [ { "id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEW0" } },{ "id": { "type": "ksuid","value": "2iGw3r6dPjE3GPLugvRXcdhwEW1" } } ] },"is-test": false,"type": "authenticated" },
+          "toggles": { "values": [ ] },
+          "specified-locale": "en-US"
+        }
+
+    SuccessWithoutInformation:
+      summary: A successful acknowledgement without a return value.
+      value:
+        {
+          "is-error": false,
+          "type": "successful"
+        }
+
+    CommandWasProcessedSuccessfully:
+      summary: The command was processed successfully.
+      value:
+        {
+          "type": "processed-successfully",
+          "is-error": false,
+          "was-processed": true
+        }
+
+    CannotTargetSourceAccountError:
+      summary: The command wasn't accepted, as the target account cannot equal the source account.
+      value:
+        {
+          "type": "cannot-target-source-account",
+          "is-error": true
+        }
+
+    ApiError:
+      summary: An API error occurred.
+      value:
+        {
+          "code": "01J15B4WXA9GZG7S7TG96DA6EC",
+          "message": "The invocation requires an authenticated access"
+        }
+
+    Error:
+      summary: Generic error for not being able to process event.
+      value:
+        {
+          "type": "error",
+          "is-error": true
+        }

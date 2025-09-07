@@ -1,0 +1,8 @@
+package sollecitom.services.modulith_example.service.test.specification
+
+import sollecitom.services.modulith_example.modules.deposit_event_endpoint.module.test.specification.DepositEventEndpointModuleTestSpecification
+import sollecitom.services.modulith_example.modules.payment_command_endpoint.module.test.specification.PaymentCommandEndpointModuleTestSpecification
+
+interface ModulesTestSpecification :
+    DepositEventEndpointModuleTestSpecification,
+    PaymentCommandEndpointModuleTestSpecification

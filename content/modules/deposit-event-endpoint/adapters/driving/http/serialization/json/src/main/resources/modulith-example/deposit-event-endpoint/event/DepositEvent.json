@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "data",
+    "metadata"
+  ],
+  "properties": {
+    "data": {
+      "$ref": "/modulith-example/deposit-event-endpoint/Deposit.json"
+    },
+    "metadata": {
+      "$ref": "/json/schemas/acme/common/event/EventMetadata.json"
+    }
+  }
+}
