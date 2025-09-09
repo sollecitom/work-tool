@@ -6,15 +6,23 @@ buildscript {
     }
 
     dependencies {
-        classpath(libs.sollecitom.gradle.plugins)
+        classpath(libs.sollecitom.gradle.plugins.base)
     }
-}
-
-plugins {
-    alias(libs.plugins.kotlin.jvm)
-    `kotlin-dsl`
 }
 
 repositories {
     RepositoryConfiguration.BuildScript.apply(this)
+    google {
+        mavenContent {
+            includeGroupAndSubgroups("androidx")
+            includeGroupAndSubgroups("com.android")
+            includeGroupAndSubgroups("com.google")
+        }
+    }
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+plugins {
+    alias(libs.plugins.kotlinMultiplatform) // TODO remove?
 }

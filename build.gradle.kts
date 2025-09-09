@@ -6,7 +6,6 @@ import sollecitom.plugins.RepositoryConfiguration
 import sollecitom.plugins.conventions.task.dependency.update.DependencyUpdateConvention
 import sollecitom.plugins.conventions.task.dependency.version.MinimumDependencyVersion
 import sollecitom.plugins.conventions.task.dependency.version.MinimumDependencyVersionConventions
-import sollecitom.plugins.conventions.task.kotlin.KotlinTaskConventions
 import sollecitom.plugins.conventions.task.maven.publish.MavenPublishConvention
 import sollecitom.plugins.conventions.task.test.AggregateTestMetricsConventions
 import sollecitom.plugins.conventions.task.test.TestTaskConventions
@@ -19,7 +18,7 @@ buildscript {
     }
 
     dependencies {
-        classpath(libs.sollecitom.gradle.plugins)
+        classpath(libs.sollecitom.gradle.plugins.base)
     }
 }
 
@@ -31,6 +30,12 @@ plugins {
     `java-library`
     idea
     alias(libs.plugins.com.palantir.git.version)
+    // this is necessary to avoid the plugins to be loaded multiple times
+    // in each subproject's classloader
+    alias(libs.plugins.composeHotReload) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
 }
 
 apply<GitVersionPlugin>()
@@ -57,12 +62,20 @@ allprojects {
     group = projectGroup
     version = currentVersion
 
-    repositories { RepositoryConfiguration.Modules.apply(this, project) }
+    repositories {
+        RepositoryConfiguration.Modules.apply(this, project)
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
+    }
 
     apply<IdeaPlugin>()
     idea { module { inheritOutputDirs = true } }
 
-    apply<KotlinTaskConventions>()
     apply<TestTaskConventions>()
 
     tasks.withType<AbstractArchiveTask>().configureEach {
@@ -74,8 +87,6 @@ allprojects {
         apply<MavenPublishConvention>()
     }
 
-    java(Plugins.JavaPlugin::configure)
-
     apply<MinimumDependencyVersionConventions>()
     configure<MinimumDependencyVersionConventions.Extension> {
         val apacheCommonsCompress = MinimumDependencyVersion(group = "org.apache.commons", name = "commons-compress", minimumVersion = "1.26.0")
@@ -84,13 +95,6 @@ allprojects {
                 apacheCommonsCompress
             )
         )
-    }
-
-    subprojects {
-        apply {
-            plugin("org.jetbrains.kotlin.jvm")
-            plugin<JavaLibraryPlugin>()
-        }
     }
 }
 
