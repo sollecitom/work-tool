@@ -25,6 +25,7 @@ junit = { module = "junit:junit", version.ref = "junit" }
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+swissknife-core-domain = { module = "sollecitom.swissknife:core-domain", version.ref = "sollecitom-swissknife" }
 
 [plugins]
 com-palantir-git-version = { id = "com.palantir.git-version", version.ref = "palantir-git-plugin" }

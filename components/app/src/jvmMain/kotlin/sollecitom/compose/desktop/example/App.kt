@@ -15,10 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import sollecitom.libs.swissknife.core.domain.identity.Id
+import sollecitom.libs.swissknife.core.domain.identity.factory.Factory
+import sollecitom.libs.swissknife.core.domain.identity.factory.invoke
 import sollecitom.work_tool.app.generated.resources.Res
 import sollecitom.work_tool.app.generated.resources.compose_multiplatform
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 @Preview
 fun App() {
@@ -34,7 +38,11 @@ fun App() {
             Button(onClick = { showContent = !showContent }) {
                 Text("Click me!")
             }
-            AnimatedVisibility(showContent) {
+            AnimatedVisibility(visible = showContent) {
+                val value = Id.Factory().ulid.monotonic() // TODO change
+                Text("ULID: $value")
+            }
+            AnimatedVisibility(visible = showContent) {
                 val greeting = remember { Greeting().greet() }
                 Column(
                     modifier = Modifier.fillMaxWidth(),
