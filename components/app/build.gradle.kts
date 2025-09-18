@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,7 +9,23 @@ plugins {
 }
 
 kotlin {
-    jvm()
+    val optIns = listOf("kotlin.time.ExperimentalTime")
+    val optInCompilerArguments = optIns.map { "-opt-in=$it" }
+    val compilerArgs = optInCompilerArguments + listOf("-Xcontext-parameters", "-Xjsr305=strict", "-Xwarning-level=CONTEXT_RECEIVERS_DEPRECATED:disabled")
+    val targetJvmVersion = JvmTarget.JVM_23
+    jvm {
+        compilerOptions {
+            jvmTarget.set(targetJvmVersion)
+            javaParameters.set(true)
+            freeCompilerArgs.set(compilerArgs)
+            progressiveMode.set(true)
+        }
+    }
+
+    compilerOptions {
+        freeCompilerArgs.set(compilerArgs)
+        progressiveMode.set(true)
+    }
 
     sourceSets {
         commonMain.dependencies {

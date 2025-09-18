@@ -20,9 +20,7 @@ import sollecitom.libs.swissknife.core.domain.identity.factory.Factory
 import sollecitom.libs.swissknife.core.domain.identity.factory.invoke
 import sollecitom.work_tool.app.generated.resources.Res
 import sollecitom.work_tool.app.generated.resources.compose_multiplatform
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 @Composable
 @Preview
 fun App() {
