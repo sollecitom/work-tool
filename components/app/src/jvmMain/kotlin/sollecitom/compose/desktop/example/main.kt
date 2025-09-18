@@ -8,6 +8,7 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "desktop-compose-example",
     ) {
-        App()
+        LoginPage()
+//        App()
     }
 }
