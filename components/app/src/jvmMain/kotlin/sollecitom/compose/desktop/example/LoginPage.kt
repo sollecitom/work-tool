@@ -1,13 +1,16 @@
-package sollecitom.compose.desktop.example
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -17,6 +20,8 @@ fun LoginPage() {
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var errorMessage by remember { mutableStateOf("") }
+        var loginResult by remember { mutableStateOf<String?>(null) }
+        val coroutineScope = rememberCoroutineScope()
 
         Column(
             modifier = Modifier
@@ -63,13 +68,30 @@ fun LoginPage() {
                 )
             }
 
+            if (loginResult != null) {
+                Text(
+                    text = loginResult!!,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+
             Button(
                 onClick = {
-                    errorMessage = if (username.isBlank() || password.isBlank()) {
-                        "Please fill in all fields"
+                    if (username.isBlank() || password.isBlank()) {
+                        errorMessage = "Please fill in all fields"
+                        loginResult = null
                     } else {
-                        // Handle login logic here (e.g., authentication call)
-                        "Login attempt with $username"
+                        errorMessage = ""
+                        // Launch coroutine to call suspend function
+                        coroutineScope.launch {
+                            val result = performLogin(username, password)
+                            loginResult = result.fold(
+                                onSuccess = { it },
+                                onFailure = { "Login failed: ${it.message}" }
+                            )
+                        }
                     }
                 },
                 modifier = Modifier
@@ -79,5 +101,16 @@ fun LoginPage() {
                 Text("Log In")
             }
         }
+    }
+}
+
+// Hypothetical suspend function for login (e.g., network call)
+suspend fun performLogin(username: String, password: String): Result<String> {
+    // Simulate network delay
+    delay(1000)
+    return if (username.isNotBlank() && password.isNotBlank()) {
+        Result.success("Login successful for $username")
+    } else {
+        Result.failure(Exception("Invalid credentials"))
     }
 }
