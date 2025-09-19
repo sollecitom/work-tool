@@ -1,9 +1,5 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.OutlinedSecureTextField
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -38,9 +34,15 @@ fun LoginPage() {
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            LoginForm(viewModel = login, usernameModifier = Modifier
-                .fillMaxWidth(0.5f)
-                .padding(bottom = 16.dp))
+            LoginForm(viewModel = login) {
+                username.modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(bottom = 16.dp)
+
+                password.modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(bottom = 16.dp)
+            }
 
             if (errorMessage.isNotEmpty()) {
                 Text(
