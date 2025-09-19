@@ -1,12 +1,14 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.OutlinedSecureTextField
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -16,8 +18,8 @@ import sollecitom.compose.desktop.example.components.Button
 @Preview
 fun LoginPage() {
     MaterialTheme {
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
+        val username = rememberTextFieldState(initialText = "")
+        val password = rememberTextFieldState(initialText = "")
         var errorMessage by remember { mutableStateOf("") }
         var loginResult by remember { mutableStateOf<String?>(null) }
 
@@ -37,24 +39,20 @@ fun LoginPage() {
             )
 
             OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
+                state = username,
                 label = { Text("Username or Email") },
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .padding(bottom = 16.dp),
-                singleLine = true
+                lineLimits = TextFieldLineLimits.SingleLine
             )
 
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+            OutlinedSecureTextField(
+                state = password,
                 label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .padding(bottom = 16.dp),
-                singleLine = true
             )
 
             if (errorMessage.isNotEmpty()) {
@@ -77,13 +75,13 @@ fun LoginPage() {
 
             Button(
                 onClick = {
-                    if (username.isBlank() || password.isBlank()) {
+                    if (username.text.isBlank() || password.text.isBlank()) {
                         errorMessage = "Please fill in all fields"
                         loginResult = null
                     } else {
                         errorMessage = ""
                         // Launch coroutine to call suspend function
-                        loginResult = performLogin(username, password).getOrElse { "Login failed: ${it.message}" }
+                        loginResult = performLogin(username.text, password.text).getOrElse { "Login failed: ${it.message}" }
                     }
                 },
                 modifier = Modifier
@@ -97,7 +95,7 @@ fun LoginPage() {
 }
 
 // Hypothetical suspend function for login (e.g., network call)
-suspend fun performLogin(username: String, password: String): Result<String> {
+suspend fun performLogin(username: CharSequence, password: CharSequence): Result<String> {
     // Simulate network delay
     delay(1000)
     return if (username.isNotBlank() && password.isNotBlank()) {
