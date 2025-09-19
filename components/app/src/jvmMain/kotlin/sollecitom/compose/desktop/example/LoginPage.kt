@@ -13,13 +13,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import sollecitom.compose.desktop.example.components.Button
+import sollecitom.compose.desktop.example.components.LoginForm
 
 @Composable
 @Preview
 fun LoginPage() {
     MaterialTheme {
-        val username = rememberTextFieldState(initialText = "")
-        val password = rememberTextFieldState(initialText = "")
+        val login by remember { mutableStateOf(LoginForm.ViewModel()) }
         var errorMessage by remember { mutableStateOf("") }
         var loginResult by remember { mutableStateOf<String?>(null) }
 
@@ -38,22 +38,9 @@ fun LoginPage() {
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            OutlinedTextField(
-                state = username,
-                label = { Text("Username or Email") },
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 16.dp),
-                lineLimits = TextFieldLineLimits.SingleLine
-            )
-
-            OutlinedSecureTextField(
-                state = password,
-                label = { Text("Password") },
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 16.dp),
-            )
+            LoginForm(viewModel = login, usernameModifier = Modifier
+                .fillMaxWidth(0.5f)
+                .padding(bottom = 16.dp))
 
             if (errorMessage.isNotEmpty()) {
                 Text(
@@ -75,13 +62,13 @@ fun LoginPage() {
 
             Button(
                 onClick = {
-                    if (username.text.isBlank() || password.text.isBlank()) {
+                    if (login.username.text.isBlank() || login.password.text.isBlank()) {
                         errorMessage = "Please fill in all fields"
                         loginResult = null
                     } else {
                         errorMessage = ""
                         // Launch coroutine to call suspend function
-                        loginResult = performLogin(username.text, password.text).getOrElse { "Login failed: ${it.message}" }
+                        loginResult = performLogin(login.username.text, login.password.text).getOrElse { "Login failed: ${it.message}" }
                     }
                 },
                 modifier = Modifier
