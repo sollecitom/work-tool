@@ -1,6 +1,5 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -10,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import sollecitom.compose.desktop.example.components.Button
 
 @Composable
 @Preview
@@ -21,7 +20,6 @@ fun LoginPage() {
         var password by remember { mutableStateOf("") }
         var errorMessage by remember { mutableStateOf("") }
         var loginResult by remember { mutableStateOf<String?>(null) }
-        val coroutineScope = rememberCoroutineScope()
 
         Column(
             modifier = Modifier
@@ -85,13 +83,7 @@ fun LoginPage() {
                     } else {
                         errorMessage = ""
                         // Launch coroutine to call suspend function
-                        coroutineScope.launch {
-                            val result = performLogin(username, password)
-                            loginResult = result.fold(
-                                onSuccess = { it },
-                                onFailure = { "Login failed: ${it.message}" }
-                            )
-                        }
+                        loginResult = performLogin(username, password).getOrElse { "Login failed: ${it.message}" }
                     }
                 },
                 modifier = Modifier
