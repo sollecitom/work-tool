@@ -35,13 +35,12 @@ fun LoginPage() {
             )
 
             LoginForm(viewModel = login) {
-                username.modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 16.dp)
-
-                password.modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 16.dp)
+                username.apply {
+                    modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
+                }
+                password.apply {
+                    modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
+                }
             }
 
             if (errorMessage.isNotEmpty()) {
