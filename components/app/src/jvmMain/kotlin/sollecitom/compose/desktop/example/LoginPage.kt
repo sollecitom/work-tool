@@ -87,7 +87,7 @@ fun LoginPage() {
 suspend fun performLogin(credentials: Credentials): Result<String> {
     // Simulate network delay
     delay(1000)
-    return if (credentials.usernameOrEmailAddress.isNotBlank() && credentials.password.isNotBlank()) {
+    return if (credentials.usernameOrEmailAddress == "Michele" && credentials.password == "bibo") {
         Result.success("Login successful for ${credentials.usernameOrEmailAddress}")
     } else {
         Result.failure(Exception("Invalid credentials"))
