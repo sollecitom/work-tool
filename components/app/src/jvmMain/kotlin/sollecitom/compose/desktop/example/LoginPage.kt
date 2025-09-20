@@ -10,12 +10,13 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import sollecitom.compose.desktop.example.components.Button
 import sollecitom.compose.desktop.example.components.LoginForm
+import sollecitom.compose.desktop.example.to_move.Credentials
 
 @Composable
 @Preview
 fun LoginPage() {
     MaterialTheme {
-        val login by remember { mutableStateOf(LoginForm.ViewModel()) }
+        val loginDetails by remember { mutableStateOf(LoginForm.ViewModel()) }
         var errorMessage by remember { mutableStateOf("") }
         var loginResult by remember { mutableStateOf<String?>(null) }
 
@@ -34,7 +35,7 @@ fun LoginPage() {
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            LoginForm(viewModel = login) {
+            LoginForm(viewModel = loginDetails) {
                 username.apply {
                     modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
                 }
@@ -63,13 +64,13 @@ fun LoginPage() {
 
             Button(
                 onClick = {
-                    if (login.username.text.isBlank() || login.password.text.isBlank()) {
+                    if (!loginDetails.isFullyPopulated()) {
                         errorMessage = "Please fill in all fields"
                         loginResult = null
                     } else {
                         errorMessage = ""
                         // Launch coroutine to call suspend function
-                        loginResult = performLogin(login.username.text, login.password.text).getOrElse { "Login failed: ${it.message}" }
+                        loginResult = performLogin(loginDetails.credentials()).getOrElse { "Login failed: ${it.message}" }
                     }
                 },
                 modifier = Modifier
@@ -83,11 +84,11 @@ fun LoginPage() {
 }
 
 // Hypothetical suspend function for login (e.g., network call)
-suspend fun performLogin(username: CharSequence, password: CharSequence): Result<String> {
+suspend fun performLogin(credentials: Credentials): Result<String> {
     // Simulate network delay
     delay(1000)
-    return if (username.isNotBlank() && password.isNotBlank()) {
-        Result.success("Login successful for $username")
+    return if (credentials.usernameOrEmailAddress.isNotBlank() && credentials.password.isNotBlank()) {
+        Result.success("Login successful for ${credentials.usernameOrEmailAddress}")
     } else {
         Result.failure(Exception("Invalid credentials"))
     }

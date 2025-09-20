@@ -12,13 +12,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import sollecitom.compose.desktop.example.to_move.Credentials
 import androidx.lifecycle.ViewModel as ComposeViewModel
 
 object LoginForm {
 
     class ViewModel(initialUsername: String = "", initialPassword: String = "") : ComposeViewModel() {
-        val username = TextFieldState(initialText = initialUsername)
-        val password = TextFieldState(initialText = initialPassword)
+
+        internal val username = TextFieldState(initialText = initialUsername)
+        internal val password = TextFieldState(initialText = initialPassword)
+
+        fun isFullyPopulated(): Boolean = username.text.isNotBlank() && password.text.isNotBlank()
+
+        fun credentials(): Credentials {
+
+            check(isFullyPopulated()) { "Username or password are blank" }
+            return Credentials(username.text, password.text)
+        }
     }
 
     @Composable
