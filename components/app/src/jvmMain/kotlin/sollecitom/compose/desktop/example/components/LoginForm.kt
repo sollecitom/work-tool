@@ -1,17 +1,18 @@
 package sollecitom.compose.desktop.example.components
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.*
-import androidx.compose.material.*
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import sollecitom.compose.desktop.example.components.customizers.text.BaseOutlinedSecureTextFieldCustomizer
+import sollecitom.compose.desktop.example.components.customizers.text.BaseOutlinedTextFieldCustomizer
+import sollecitom.compose.desktop.example.components.customizers.text.OutlinedSecureTextFieldCustomizer
+import sollecitom.compose.desktop.example.components.customizers.text.OutlinedTextFieldCustomizer
+import sollecitom.compose.desktop.example.components.extensions.moveFocusWhenKeyIsPressed
 import sollecitom.compose.desktop.example.to_move.Credentials
 import androidx.lifecycle.ViewModel as ComposeViewModel
 
@@ -63,161 +64,16 @@ object LoginForm {
         }
     }
 
-    private class UsernameCustomizer(state: TextFieldState) : BaseOutlinedTextFieldCustomizer(state)
+    private class UsernameCustomizer(state: TextFieldState) : BaseOutlinedTextFieldCustomizer(state) {
+
+        @Composable
+        override fun initialiseDefaults() {
+            super.initialiseDefaults()
+            val focusManager = LocalFocusManager.current
+            modifier = with(focusManager) { modifier.moveFocusWhenKeyIsPressed(key = Key.Tab) }
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+        }
+    }
 
     private class PasswordCustomizer(state: TextFieldState) : BaseOutlinedSecureTextFieldCustomizer(state)
-}
-
-interface OutlinedTextFieldCustomizer {
-    var modifier: Modifier
-    var enabled: Boolean
-    var readOnly: Boolean
-    var textStyle: TextStyle
-    var label: @Composable (() -> Unit)?
-    var placeholder: @Composable (() -> Unit)?
-    var leadingIcon: @Composable (() -> Unit)?
-    var trailingIcon: @Composable (() -> Unit)?
-    var isError: Boolean
-    var inputTransformation: InputTransformation?
-    var outputTransformation: OutputTransformation?
-    var keyboardOptions: KeyboardOptions
-    var onKeyboardAction: KeyboardActionHandler?
-    var lineLimits: TextFieldLineLimits
-    var scrollState: ScrollState
-    var shape: Shape
-    var colors: TextFieldColors
-    var interactionSource: MutableInteractionSource?
-
-    @Composable
-    fun field()
-
-    companion object
-}
-
-interface OutlinedSecureTextFieldCustomizer {
-    var modifier: Modifier
-    var enabled: Boolean
-    var textStyle: TextStyle
-    var label: @Composable (() -> Unit)?
-    var placeholder: @Composable (() -> Unit)?
-    var leadingIcon: @Composable (() -> Unit)?
-    var trailingIcon: @Composable (() -> Unit)?
-    var isError: Boolean
-    var inputTransformation: InputTransformation?
-    var keyboardOptions: KeyboardOptions
-    var onKeyboardAction: KeyboardActionHandler?
-    var shape: Shape
-    var colors: TextFieldColors
-    var interactionSource: MutableInteractionSource?
-
-    @Composable
-    fun field()
-
-    companion object
-}
-
-open class BaseOutlinedSecureTextFieldCustomizer(
-    private val state: TextFieldState,
-) : OutlinedSecureTextFieldCustomizer {
-
-    override var modifier: Modifier = Modifier
-    override var enabled: Boolean = true
-    override lateinit var textStyle: TextStyle
-    override var label: @Composable (() -> Unit)? = null
-    override var placeholder: @Composable (() -> Unit)? = null
-    override var leadingIcon: @Composable (() -> Unit)? = null
-    override var trailingIcon: @Composable (() -> Unit)? = null
-    override var isError: Boolean = false
-    override var inputTransformation: InputTransformation? = null
-    override var keyboardOptions: KeyboardOptions = KeyboardOptions.Default
-    override var onKeyboardAction: KeyboardActionHandler? = null
-    override lateinit var shape: Shape
-    override lateinit var colors: TextFieldColors
-    override var interactionSource: MutableInteractionSource? = null
-
-    @Composable
-    open fun initialiseDefaults() {
-        textStyle = LocalTextStyle.current
-        shape = TextFieldDefaults.OutlinedTextFieldShape
-        colors = TextFieldDefaults.outlinedTextFieldColors()
-    }
-
-    @Composable
-    final override fun field() {
-        OutlinedSecureTextField(
-            state = state,
-            modifier = modifier,
-            enabled = enabled,
-            textStyle = textStyle,
-            label = label ?: { Text("Password") },
-            placeholder = placeholder,
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            isError = isError,
-            inputTransformation = inputTransformation,
-            keyboardOptions = keyboardOptions,
-            onKeyboardAction = onKeyboardAction,
-            shape = shape,
-            colors = colors,
-            interactionSource = interactionSource
-        )
-    }
-}
-
-open class BaseOutlinedTextFieldCustomizer(
-    private val state: TextFieldState,
-) : OutlinedTextFieldCustomizer {
-
-    override var modifier: Modifier = Modifier
-    override var enabled: Boolean = true
-    override var readOnly: Boolean = false
-    override lateinit var textStyle: TextStyle
-    override var label: @Composable (() -> Unit)? = null
-    override var placeholder: @Composable (() -> Unit)? = null
-    override var leadingIcon: @Composable (() -> Unit)? = null
-    override var trailingIcon: @Composable (() -> Unit)? = null
-    override var isError: Boolean = false
-    override var inputTransformation: InputTransformation? = null
-    override var outputTransformation: OutputTransformation? = null
-    override var keyboardOptions: KeyboardOptions = KeyboardOptions.Default
-    override var onKeyboardAction: KeyboardActionHandler? = null
-    override var lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default
-    override lateinit var scrollState: ScrollState
-    override lateinit var shape: Shape
-    override lateinit var colors: TextFieldColors
-    override var interactionSource: MutableInteractionSource? = null
-
-    @Composable
-    open fun initialiseDefaults() {
-
-        textStyle = LocalTextStyle.current
-        scrollState = rememberScrollState()
-        shape = TextFieldDefaults.OutlinedTextFieldShape
-        colors = TextFieldDefaults.outlinedTextFieldColors()
-    }
-
-    @Composable
-    final override fun field() {
-        OutlinedTextField(
-            state = state,
-            modifier = modifier,
-            enabled = enabled,
-            readOnly = readOnly,
-            textStyle = textStyle,
-            label = label ?: { Text("Username or Email") },
-            placeholder = placeholder,
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            isError = isError,
-            inputTransformation = inputTransformation,
-            outputTransformation = outputTransformation,
-            keyboardOptions = keyboardOptions,
-            onKeyboardAction = onKeyboardAction,
-            lineLimits = lineLimits,
-            scrollState = scrollState,
-            shape = shape,
-            colors = colors,
-            interactionSource = interactionSource
-        )
-    }
 }

@@ -37,10 +37,10 @@ fun LoginPage() {
 
             LoginForm(viewModel = loginDetails) {
                 username.apply {
-                    modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
+                    modifier = modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
                 }
                 password.apply {
-                    modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
+                    modifier = modifier.fillMaxWidth(0.5f).padding(bottom = 16.dp)
                 }
             }
 
