@@ -36,7 +36,7 @@ object LoginForm {
     operator fun invoke(
         viewModel: ViewModel,
         columnModifier: Modifier = Modifier,
-        customize: Customizer.() -> Unit = {},
+        customize: @Composable Customizer.() -> Unit = {},
     ) {
         Column(modifier = columnModifier) {
             val customizer = CustomizerImpl(viewModel).also { it.initializeDefaults() }
