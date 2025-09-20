@@ -47,15 +47,23 @@ object LoginForm {
     }
 
     interface Customizer {
-        val username: OutlinedTextFieldCustomizer
-        val password: OutlinedSecureTextFieldCustomizer
+        fun username(customize: OutlinedTextFieldCustomizer.() -> Unit = {})
+        fun password(customize: OutlinedSecureTextFieldCustomizer.() -> Unit = {})
     }
 
     private class CustomizerImpl(
-        viewModel: ViewModel,
-        override val username: UsernameCustomizer = UsernameCustomizer(state = viewModel.username),
-        override val password: PasswordCustomizer = PasswordCustomizer(state = viewModel.password)
+        private val viewModel: ViewModel,
+        val username: UsernameCustomizer = UsernameCustomizer(state = viewModel.username),
+        val password: PasswordCustomizer = PasswordCustomizer(state = viewModel.password)
     ) : Customizer {
+
+        override fun username(customize: OutlinedTextFieldCustomizer.() -> Unit) {
+            username.customize()
+        }
+
+        override fun password(customize: OutlinedSecureTextFieldCustomizer.() -> Unit) {
+            password.customize()
+        }
 
         @Composable
         fun initializeDefaults() {
