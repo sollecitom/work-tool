@@ -1,6 +1,6 @@
 [versions]
 # libraries
-kotlin = "2.2.10"
+kotlin = "2.2.21"
 
 sollecitom-gradle-plugins = "1.0.0-SNAPSHOT"
 sollecitom-swissknife = "1.0.0-SNAPSHOT"
@@ -18,6 +18,7 @@ palantir-git-plugin = "4.0.0"
 
 [libraries]
 sollecitom-gradle-plugins-base = { module = "sollecitom.gradle-plugins:base", version.ref = "sollecitom-gradle-plugins" }
+sollecitom-gradle-plugins-kotlin-jvm = { module = "sollecitom.gradle-plugins:kotlin-jvm", version.ref = "sollecitom-gradle-plugins" }
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -26,6 +27,7 @@ androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecyc
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 swissknife-core-domain = { module = "sollecitom.swissknife:core-domain", version.ref = "sollecitom-swissknife" }
+swissknife-kotlin-extensions = { module = "sollecitom.swissknife:kotlin-extensions", version.ref = "sollecitom-swissknife" }
 
 [plugins]
 com-palantir-git-version = { id = "com.palantir.git-version", version.ref = "palantir-git-plugin" }
@@ -33,3 +35,4 @@ composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "com
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

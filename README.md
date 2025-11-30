@@ -6,4 +6,4 @@ A desktop application for work management in a corporate settings.
 
 ### Run the app
 
-`./gradlew app:run` 
+`./gradlew app:run`
